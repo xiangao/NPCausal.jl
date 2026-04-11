@@ -45,8 +45,8 @@ function ate(y::AbstractVector, a::AbstractVector, X::DataFrame;
             # Fit binary classifier for every treatment level (including last)
             a_binary = categorical(a_train .== a_val)
             mach_pi = machine(pi_model, X_train, a_binary)
-            fit!(mach_pi, verbosity=0)
-            preds = predict(mach_pi, X_test)
+            MLJ.fit!(mach_pi, verbosity=0)
+            preds = MLJ.predict(mach_pi, X_test)
             pihat[test_idx, i] = pdf.(preds, true)
 
             # --- Outcome Regression E[Y | A=a_val, X] ---
@@ -56,9 +56,9 @@ function ate(y::AbstractVector, a::AbstractVector, X::DataFrame;
             y_train_a = y_train[mask]
 
             mach_mu = machine(mu_model, X_train_a, y_train_a)
-            fit!(mach_mu, verbosity=0)
+            MLJ.fit!(mach_mu, verbosity=0)
 
-            muhat[test_idx, i] = predict(mach_mu, X_test)
+            muhat[test_idx, i] = MLJ.predict(mach_mu, X_test)
         end
     end
     

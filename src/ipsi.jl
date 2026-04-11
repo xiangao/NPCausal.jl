@@ -142,12 +142,14 @@ function ipsi(y::AbstractVector, a::AbstractVector, x_trt::DataFrame, x_out::Dat
     eff_ll2 = est_eff .- calpha .* sigma ./ sqrt(n)
     eff_ul2 = est_eff .+ calpha .* sigma ./ sqrt(n)
     
+    se_eff = sigma ./ sqrt(n)
+
     res = DataFrame(
-        increment = delta_seq, est = est_eff, se = sigma,
+        increment = delta_seq, est = est_eff, se = se_eff,
         ci_ll = eff_ll2, ci_ul = eff_ul2
     )
     res2 = DataFrame(
-        increment = delta_seq, est = est_eff, se = sigma,
+        increment = delta_seq, est = est_eff, se = se_eff,
         ci_ll = eff_ll, ci_ul = eff_ul
     )
     

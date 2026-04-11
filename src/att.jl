@@ -38,8 +38,8 @@ function att(y::AbstractVector, a::AbstractVector, X::DataFrame;
         # --- Propensity Score P(A=1 | X) ---
         a_binary = categorical(a_train .== 1)
         mach_pi = machine(pi_model, X_train, a_binary)
-        fit!(mach_pi, verbosity=0)
-        preds_pi = predict(mach_pi, X_test)
+        MLJ.fit!(mach_pi, verbosity=0)
+        preds_pi = MLJ.predict(mach_pi, X_test)
         pihat[test_idx] = pdf.(preds_pi, true)
         
         # --- Outcome Regression E[Y | A=0, X] ---
@@ -48,8 +48,8 @@ function att(y::AbstractVector, a::AbstractVector, X::DataFrame;
         y_train_0 = y_train[mask0]
         
         mach_mu0 = machine(mu_model, X_train_0, y_train_0)
-        fit!(mach_mu0, verbosity=0)
-        mu0hat[test_idx] = predict(mach_mu0, X_test)
+        MLJ.fit!(mach_mu0, verbosity=0)
+        mu0hat[test_idx] = MLJ.predict(mach_mu0, X_test)
     end
     
     # Clip pihat to avoid division by zero or 1
