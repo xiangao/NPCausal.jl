@@ -18,6 +18,15 @@ using Pkg
 Pkg.add(url="https://github.com/xiangao/NPCausal.jl")
 ```
 
+## Tutorials
+
+Full documentation: **https://xiangao.github.io/NPCausal.jl/**
+
+| Tutorial | Description |
+|----------|-------------|
+| [Getting Started](https://xiangao.github.io/NPCausal.jl/vignettes/01_getting_started/) | ATE and ATT estimation with cross-fitting |
+| [Advanced Estimators](https://xiangao.github.io/NPCausal.jl/vignettes/02_advanced_estimators/) | Continuous treatment, IV, and policy intervention estimators |
+
 ## Basic Usage
 
 ```julia
