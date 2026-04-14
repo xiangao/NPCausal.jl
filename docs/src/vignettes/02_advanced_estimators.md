@@ -1,5 +1,9 @@
 # Advanced Estimators in NPCausal.jl
 
+```@meta
+CurrentModule = NPCausal
+```
+
 In addition to basic ATE and ATT functions, `NPCausal.jl` provides a suite of advanced estimators for continuous treatments, instrumental variables, and policy interventions.
 
 ## 1. Continuous Treatment Effects (`ctseff`)
@@ -13,14 +17,14 @@ using Random
 
 # Generate dummy data with a continuous treatment
 Random.seed!(42)
-n = 5000
+n = 800
 X = DataFrame(x1 = randn(n), x2 = randn(n))
 a = randn(n) .+ X.x1 # Continuous treatment
 y = a.^2 .+ X.x2 .+ randn(n)
 
 # Estimate continuous effect curve across a grid of evaluation points
 eval_pts = collect(-2.0:0.5:2.0)
-results = ctseff(y, a, X, eval_pts; nsplits=5)
+results = ctseff(y, a, X, eval_pts)
 
 # View curve estimates and confidence bands
 println(results.res)

@@ -1,5 +1,9 @@
 # Getting Started with NPCausal.jl
 
+```@meta
+CurrentModule = NPCausal
+```
+
 `NPCausal.jl` is a modern, high-performance Julia implementation of the popular nonparametric causal inference methods developed by Edward Kennedy. 
 
 By default, this package leverages **`MLJ.jl`** alongside the extremely fast gradient boosted trees package **`EvoTrees.jl`**. It also utilizes native Julia multithreading to perform the cross-fitting loop in parallel, virtually eliminating the bottleneck associated with ensembled nuisance parameter estimation.
@@ -15,20 +19,20 @@ Pkg.add(url="https://github.com/yourusername/NPCausal.jl")
 
 The `ate()` function provides doubly robust estimation of the Average Treatment Effect.
 
-```julia
+```@example np_getting_started
 using NPCausal
 using DataFrames
 using Random
 
 # Generate dummy data
 Random.seed!(42)
-n = 10000
+n = 1000
 X = DataFrame(x1 = randn(n), x2 = randn(n))
 a = rand([0, 1, 2], n) # Categorical treatment
 y = X.x1 .+ X.x2 .* (a .== 1) .+ 2 .* (a .== 2) .+ randn(n)
 
-# Estimate ATE using 5-fold cross-fitting
-results = ate(y, a, X; nsplits=5)
+# Estimate ATE using 2-fold cross-fitting for a fast docs example
+results = ate(y, a, X; nsplits=2)
 
 # View Average Treatment Effects
 println(results.means)
@@ -41,21 +45,21 @@ println(results.contrasts)
 
 If you have a binary treatment variable and are specifically interested in the treatment effect for the treated subpopulation, use the `att()` function.
 
-```julia
+```@example np_getting_started
 using NPCausal
 using DataFrames
 using Random
 
 # Generate dummy data
 Random.seed!(42)
-n = 5000
+n = 800
 X = DataFrame(x1 = randn(n), x2 = randn(n))
 # Binary treatment (0 or 1)
 a = rand([0, 1], n)
 y = X.x1 .+ 3 .* X.x2 .* a .+ randn(n)
 
-# Estimate ATT using 5-fold cross-fitting
-results = att(y, a, X; nsplits=5)
+# Estimate ATT using 2-fold cross-fitting
+results = att(y, a, X; nsplits=2)
 
 # View Average Treatment Effect on the Treated
 println(results.res)
