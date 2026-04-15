@@ -72,47 +72,47 @@ function ivbds(y::AbstractVector, a::AbstractVector, z::AbstractVector, X::DataF
         
         z_binary = categorical(z_train .== 1)
         mach_pi = machine(pi_model, X_train, z_binary)
-        fit!(mach_pi, verbosity=0)
-        pihat[test_idx] = pdf.(predict(mach_pi, X_test), true)
+        MLJ.fit!(mach_pi, verbosity=0)
+        pihat[test_idx] = pdf.(MLJ.predict(mach_pi, X_test), true)
         
         train_z1 = z_train .== 1
         train_z0 = z_train .== 0
         
         mach_la1 = machine(mu_model, X_train[train_z1, :], a_train[train_z1])
-        fit!(mach_la1, verbosity=0)
-        la1hat[test_idx] = predict(mach_la1, X_test)
+        MLJ.fit!(mach_la1, verbosity=0)
+        la1hat[test_idx] = MLJ.predict(mach_la1, X_test)
         
         if !onesided
             mach_la0 = machine(mu_model, X_train[train_z0, :], a_train[train_z0])
-            fit!(mach_la0, verbosity=0)
-            la0hat[test_idx] = predict(mach_la0, X_test)
+            MLJ.fit!(mach_la0, verbosity=0)
+            la0hat[test_idx] = MLJ.predict(mach_la0, X_test)
         else
             la0hat[test_idx] .= 0.0
         end
         
         mach_mu1 = machine(mu_model, X_train[train_z1, :], y_train[train_z1])
-        fit!(mach_mu1, verbosity=0)
-        mu1hat[test_idx] = predict(mach_mu1, X_test)
+        MLJ.fit!(mach_mu1, verbosity=0)
+        mu1hat[test_idx] = MLJ.predict(mach_mu1, X_test)
         
         mach_mu0 = machine(mu_model, X_train[train_z0, :], y_train[train_z0])
-        fit!(mach_mu0, verbosity=0)
-        mu0hat[test_idx] = predict(mach_mu0, X_test)
+        MLJ.fit!(mach_mu0, verbosity=0)
+        mu0hat[test_idx] = MLJ.predict(mach_mu0, X_test)
         
         mach_vl1 = machine(mu_model, X_train[train_z1, :], vl1[train_idx][train_z1])
-        fit!(mach_vl1, verbosity=0)
-        vl1hat[test_idx] = predict(mach_vl1, X_test)
+        MLJ.fit!(mach_vl1, verbosity=0)
+        vl1hat[test_idx] = MLJ.predict(mach_vl1, X_test)
         
         mach_vl0 = machine(mu_model, X_train[train_z0, :], vl0[train_idx][train_z0])
-        fit!(mach_vl0, verbosity=0)
-        vl0hat[test_idx] = predict(mach_vl0, X_test)
+        MLJ.fit!(mach_vl0, verbosity=0)
+        vl0hat[test_idx] = MLJ.predict(mach_vl0, X_test)
         
         mach_vu1 = machine(mu_model, X_train[train_z1, :], vu1[train_idx][train_z1])
-        fit!(mach_vu1, verbosity=0)
-        vu1hat[test_idx] = predict(mach_vu1, X_test)
+        MLJ.fit!(mach_vu1, verbosity=0)
+        vu1hat[test_idx] = MLJ.predict(mach_vu1, X_test)
         
         mach_vu0 = machine(mu_model, X_train[train_z0, :], vu0[train_idx][train_z0])
-        fit!(mach_vu0, verbosity=0)
-        vu0hat[test_idx] = predict(mach_vu0, X_test)
+        MLJ.fit!(mach_vu0, verbosity=0)
+        vu0hat[test_idx] = MLJ.predict(mach_vu0, X_test)
     end
     
     pihat = clamp.(pihat, 1e-4, 1.0 - 1e-4)

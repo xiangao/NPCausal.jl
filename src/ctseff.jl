@@ -62,24 +62,24 @@ function ctseff(y::AbstractVector, a::AbstractVector, X::DataFrame;
     a_vals = collect(range(a_min, a_max, length=n_pts))
     
     mach_pi = machine(model, X, a)
-    fit!(mach_pi, verbosity=0)
-    pimod_vals = predict(mach_pi, X)
+    MLJ.fit!(mach_pi, verbosity=0)
+    pimod_vals = MLJ.predict(mach_pi, X)
     
     mach_pi2 = machine(model, X, (a .- pimod_vals).^2)
-    fit!(mach_pi2, verbosity=0)
-    pi2mod_vals = clamp.(predict(mach_pi2, X), 1e-4, Inf)
+    MLJ.fit!(mach_pi2, verbosity=0)
+    pi2mod_vals = clamp.(MLJ.predict(mach_pi2, X), 1e-4, Inf)
     
     Xa = copy(X)
     Xa.a = a
     mach_mu = machine(model, Xa, y)
-    fit!(mach_mu, verbosity=0)
-    muhat_vals = predict(mach_mu, Xa)
+    MLJ.fit!(mach_mu, verbosity=0)
+    muhat_vals = MLJ.predict(mach_mu, Xa)
     
     muhat_mat = zeros(n, n_pts)
     @threads for j in 1:n_pts
         Xa_new = copy(X)
         Xa_new.a .= a_vals[j]
-        muhat_mat[:, j] = predict(mach_mu, Xa_new)
+        muhat_mat[:, j] = MLJ.predict(mach_mu, Xa_new)
     end
     
     a_std = (a .- pimod_vals) ./ sqrt.(pi2mod_vals)

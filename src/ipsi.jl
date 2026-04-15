@@ -40,8 +40,8 @@ function ipsi(y::AbstractVector, a::AbstractVector, x_trt::DataFrame, x_out::Dat
         train_mask = slong .!= split
         test_mask = slong .== split
         mach_trt = machine(trt_model, x_trt[train_mask, :], categorical(a[train_mask] .== 1))
-        fit!(mach_trt, verbosity=0)
-        ps[test_mask] = pdf.(predict(mach_trt, x_trt[test_mask, :]), true)
+        MLJ.fit!(mach_trt, verbosity=0)
+        ps[test_mask] = pdf.(MLJ.predict(mach_trt, x_trt[test_mask, :]), true)
     end
     ps = clamp.(ps, 1e-4, 1.0 - 1e-4)
     
@@ -90,15 +90,15 @@ function ipsi(y::AbstractVector, a::AbstractVector, x_trt::DataFrame, x_out::Dat
                 
                 if sum(train_t_mask) > 0
                     mach_out = machine(out_model, x_out_t[train_t_mask, :], rtp1[train_t_mask])
-                    fit!(mach_out, verbosity=0)
+                    MLJ.fit!(mach_out, verbosity=0)
                     
                     newx1 = x_out_t[mask_t, :]
                     newx1.a .= 1
                     newx0 = x_out_t[mask_t, :]
                     newx0.a .= 0
                     
-                    m1 = predict(mach_out, newx1)
-                    m0 = predict(mach_out, newx0)
+                    m1 = MLJ.predict(mach_out, newx1)
+                    m0 = MLJ.predict(mach_out, newx0)
                     
                     pi_t = dat.ps[mask_t]
                     rt[mask_t, j] = (delta .* pi_t .* m1 .+ (1 .- pi_t) .* m0) ./ (delta .* pi_t .+ 1 .- pi_t)
