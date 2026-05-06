@@ -3,6 +3,9 @@
 A blazing-fast, modern Julia implementation of `npcausal`.
 
 This package provides nonparametric estimation of causal effects using the theory of influence functions, cross-fitting, and machine learning.
+When loaded together with [`CausalGraphs.jl`](https://github.com/xiangao/CausalGraphs.jl),
+it can also estimate graph-identified ADMG effects after `CausalGraphs.jl`
+handles identification.
 
 ## Why Julia?
 The original `npcausal` package in R relies on `SuperLearner` for cross-fitted estimation of nuisance parameters. While theoretically sound, `SuperLearner` running sequentially in R can be a major bottleneck on large datasets.
@@ -26,6 +29,41 @@ Full documentation: **https://xiangao.github.io/NPCausal.jl/**
 |----------|-------------|
 | [Getting Started](https://xiangao.github.io/NPCausal.jl/vignettes/01_getting_started/) | ATE and ATT estimation with cross-fitting |
 | [Advanced Estimators](https://xiangao.github.io/NPCausal.jl/vignettes/02_advanced_estimators/) | Continuous treatment, IV, and policy intervention estimators |
+
+## ADMG Estimation with CausalGraphs.jl
+
+`NPCausal.jl` exposes optional ADMG estimators when `CausalGraphs.jl` is also
+installed and loaded:
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/xiangao/CausalGraphs.jl")
+
+using NPCausal, CausalGraphs, DataFrames
+
+graph = make_graph(
+    vertices = [:A, :M, :Y],
+    di_edges = [(:A, :M), (:M, :Y)],
+    bi_edges = [(:A, :Y)],
+)
+
+res = NPCausal.admg_estimate_causal(
+    a = [1, 0],
+    data = data,
+    graph = graph,
+    treatment = :A,
+    outcome = :Y,
+)
+
+r = x -> round(x, sigdigits=4)
+(ACE = r(res[:TMLE].ACE),
+ lower_ci = r(res[:TMLE].lower_ci),
+ upper_ci = r(res[:TMLE].upper_ci))
+```
+
+The ADMG route supports backdoor/a-fixable effects via `ate`,
+p-fixable/front-door effects via NPS TMLE, nested-fixable effects via ANIPW,
+and finite-support discrete ID-algorithm functionals via `:IDPlugin`.
 
 ## Basic Usage
 
