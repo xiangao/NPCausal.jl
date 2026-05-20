@@ -1,18 +1,16 @@
 # NPCausal.jl
 
-A blazing-fast, modern Julia implementation of `npcausal`.
-
-This package provides nonparametric estimation of causal effects using the theory of influence functions, cross-fitting, and machine learning.
+`NPCausal.jl` is a Julia implementation of the estimators I use from
+`npcausal`: influence-function based causal estimators with cross-fitting.
 When loaded together with [`CausalGraphs.jl`](https://github.com/xiangao/CausalGraphs.jl),
 it can also estimate graph-identified ADMG effects after `CausalGraphs.jl`
 handles identification.
 
 ## Why Julia?
-The original `npcausal` package in R relies on `SuperLearner` for cross-fitted estimation of nuisance parameters. While theoretically sound, `SuperLearner` running sequentially in R can be a major bottleneck on large datasets.
-
-`NPCausal.jl` solves this by utilizing:
-1. **`MLJ.jl` and `EvoTrees.jl`**: By default, it uses high-performance gradient boosting directly in Julia.
-2. **Native Multithreading**: The cross-fitting process is parallelized using `Threads.@threads`, operating with zero memory copying and linear scaling across cores.
+The R package is useful, but repeated nuisance fitting can be slow when the
+sample is large. This version keeps the same basic estimators but lets Julia do
+the repeated work. By default it uses `MLJ.jl` and `EvoTrees.jl`, and the
+cross-fitting loop can use Julia threads.
 
 ## Installation
 
