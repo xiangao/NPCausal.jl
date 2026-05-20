@@ -4,9 +4,12 @@
 CurrentModule = NPCausal
 ```
 
-`NPCausal.jl` is a modern, high-performance Julia implementation of the popular nonparametric causal inference methods developed by Edward Kennedy. 
+`NPCausal.jl` implements several nonparametric causal estimators in Julia. The
+examples here use simple simulated data so the estimands and returned objects
+are easy to see.
 
-By default, this package leverages **`MLJ.jl`** alongside the extremely fast gradient boosted trees package **`EvoTrees.jl`**. It also utilizes native Julia multithreading to perform the cross-fitting loop in parallel, virtually eliminating the bottleneck associated with ensembled nuisance parameter estimation.
+By default the nuisance functions are fit through `MLJ.jl`, often with
+`EvoTrees.jl`. The cross-fitting loop can use Julia threads.
 
 ## Installation
 
@@ -17,7 +20,7 @@ Pkg.add(url="https://github.com/yourusername/NPCausal.jl")
 
 ## 1. Average Treatment Effect (ATE)
 
-The `ate()` function provides doubly robust estimation of the Average Treatment Effect.
+The `ate()` function estimates average treatment effects.
 
 ```@example np_getting_started
 using NPCausal
@@ -67,4 +70,5 @@ println(results.res)
 
 ## Performance Note
 
-For optimal performance, start Julia with multiple threads (e.g., `julia -t auto`). `NPCausal.jl` will automatically distribute the cross-validation folds across available CPU threads, performing the nuisance estimation in parallel.
+For larger examples, start Julia with multiple threads, for example
+`julia -t auto`. The cross-fitting folds can then run in parallel.

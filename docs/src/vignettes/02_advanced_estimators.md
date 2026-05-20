@@ -4,7 +4,9 @@
 CurrentModule = NPCausal
 ```
 
-In addition to basic ATE and ATT functions, `NPCausal.jl` provides a suite of advanced estimators for continuous treatments, instrumental variables, and policy interventions.
+This page shows the estimators beyond the basic ATE and ATT cases: continuous
+treatments, instrumental variables, and incremental propensity score
+interventions.
 
 ```@setup np_advanced
 using NPCausal
@@ -39,7 +41,9 @@ delta_values = [0.5, 1.5, 2.0]
 
 ## 1. Continuous Treatment Effects (`ctseff`)
 
-When your treatment variable is continuous rather than discrete, estimating the average dose-response curve requires specialized techniques. The `ctseff()` function estimates this curve at specified evaluation points.
+When the treatment is continuous, the target is a dose-response curve rather
+than a finite set of treatment means. `ctseff()` estimates the curve at chosen
+evaluation points.
 
 ```@example np_advanced
 results_cts = ctseff(y_cont, a_cont, X; bw_seq = bw_seq, n_pts = length(eval_pts), a_rng = (first(eval_pts), last(eval_pts)))

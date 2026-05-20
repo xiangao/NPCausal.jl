@@ -1,8 +1,10 @@
 # NPCausal.jl
 
-`NPCausal.jl` provides modern nonparametric causal estimators in Julia, with a focus on doubly robust inference, flexible nuisance estimation, and practical multi-treatment workflows.
+`NPCausal.jl` is a Julia implementation of the nonparametric causal estimators I
+use from `npcausal`. The package focuses on influence-function estimators with
+cross-fitting.
 
-## Included Estimators
+## Included estimators
 
 - `ate` for average treatment effects
 - `att` for average treatment effects on the treated
